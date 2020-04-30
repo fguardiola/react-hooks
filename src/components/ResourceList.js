@@ -8,14 +8,20 @@ const ResourceList = ({ resource }) => {
 
 
 
-    const fetchResources = async (resource) => {
-        const response = await axios.get(`https://jsonplaceholder.typicode.com/${resource}`)
-        setResources(response.data)
-    }
+    // const fetchResources = async (resource) => {
+    //     const response = await axios.get(`https://jsonplaceholder.typicode.com/${resource}`)
+    //     setResources(response.data)
+    // }
     // // useEffect is a conbination og componentDidMount and componentDidUpdate. Only if resource change
     //  the inner arrow function is gonna run so fetchResources is gonna be called
+
+    //if you need an async job to be run, you need an external function like fetchResources or define the logic
+    // within the arrow function but within a self invoking function 
     useEffect(() => {
-        fetchResources(resource)
+        (async (resource) => {
+            const response = await axios.get(`https://jsonplaceholder.typicode.com/${resource}`)
+            setResources(response.data)
+        })(resource)
     }, [resource])
 
     return (
