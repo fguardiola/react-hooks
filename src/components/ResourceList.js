@@ -1,31 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 
 
-class ResourceList extends React.Component {
-    state = {
-        resources: []
-    }
+const ResourceList = ({ resource }) => {
+    //resource is either "posts" or "todos" string
+    const [resources, setResources] = useState([])
 
-    async componentDidMount() {
-        const respose = await axios.get(`https://jsonplaceholder.typicode.com/${this.props.resource}`)
 
-        this.setState({ resources: respose.data })
-    }
-    // componentDidUpdate is called every time the parent rerender or setState is called 
-    async componentDidUpdate(prevProps) {
-        //only make rquest when resources prop change 
-        if (prevProps !== this.props) {
-            const respose = await axios.get(`https://jsonplaceholder.typicode.com/${this.props.resource}`)
 
-            this.setState({ resources: respose.data })
-        }
+    const fetchResources = async (resource) => {
+        const response = await axios.get(`https://jsonplaceholder.typicode.com/${resource}`)
+        setResources(response.data)
     }
-    render() {
-        return (
-            <div> {this.state.resources.length} </div>
-        );
-    }
+    // // useEffect is a conbination og componentDidMount and componentDidUpdate. Only if resource change
+    //  the inner arrow function is gonna run so fetchResources is gonna be called
+    useEffect(() => {
+        fetchResources(resource)
+    }, [resource])
+
+    return (
+        <div> {resources.length} </div>
+    );
+
 }
 
 export default ResourceList;
